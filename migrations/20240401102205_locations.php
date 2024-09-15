@@ -82,6 +82,7 @@ final class Locations extends AbstractMigration
         $this->table('location_history')->drop()->update();
         $this->table('business_location')->drop()->update();
         $this->table('location')->drop()->update();
+        $this->table('country')->drop()->update();
 
     }
 }
