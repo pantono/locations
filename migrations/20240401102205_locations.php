@@ -6,7 +6,7 @@ use Phinx\Migration\AbstractMigration;
 
 final class Locations extends AbstractMigration
 {
-    public function change(): void
+    public function up(): void
     {
         $this->table('location')
             ->addColumn('name', 'string')
@@ -34,5 +34,54 @@ final class Locations extends AbstractMigration
             ->addColumn('date', 'datetime')
             ->addColumn('entry', 'string')
             ->create();
+
+        $names = json_decode(
+            file_get_contents(__DIR__ . '/data/countries.json'),
+            true
+        );
+        $iso3 = json_decode(
+            file_get_contents(__DIR__ . '/data/iso3.json'),
+            true
+        );
+        $phoneCodes = json_decode(
+            file_get_contents(__DIR__ . '/data/phone-codes.json'),
+            true
+        );
+
+        $currencies = json_decode(
+            file_get_contents(__DIR__ . '/data/currencies.json'),
+            true
+        );
+
+        $countries = [];
+        foreach ($names as $iso2 => $name) {
+            $countries[] = [
+                'name' => $name,
+                'iso2' => $iso2,
+                'iso3' => $iso3[$iso2],
+                'phone_code' => $phoneCodes[$iso2],
+                'currency_code' => $currencies[$iso2]
+            ];
+        }
+
+        $this->table('country')
+            ->addColumn('name', 'string')
+            ->addColumn('iso2', 'string', ['length' => 2])
+            ->addColumn('iso3', 'string', ['length' => 3])
+            ->addColumn('phone_code', 'string')
+            ->addColumn('currency_code', 'string')
+            ->addIndex('iso2')
+            ->addIndex('iso3')
+            ->insert($countries)
+            ->create();
+
+    }
+
+    public function down()
+    {
+        $this->table('location_history')->drop()->update();
+        $this->table('business_location')->drop()->update();
+        $this->table('location')->drop()->update();
+
     }
 }
