@@ -10,6 +10,10 @@ use Pantono\Locations\Model\BusinessLocation;
 use Pantono\Locations\Event\PreLocationSaveEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Pantono\Locations\Event\PostLocationSaveEvent;
+use Pantono\Locations\Model\Country;
+use Pantono\Locations\Filter\CountryFilter;
+use Pantono\Locations\Event\PreCountrySaveEvent;
+use Pantono\Locations\Event\PostCountrySaveEvent;
 
 class Locations
 {
@@ -59,6 +63,42 @@ class Locations
 
         $event = new PostLocationSaveEvent();
         $event->setCurrent($location);
+        if ($previous) {
+            $event->setPrevious($previous);
+        }
+        $this->dispatcher->dispatch($event);
+    }
+
+    public function getCountryById(int $id): ?Country
+    {
+        return $this->hydrator->hydrate(Country::class, $this->repository->getCountryById($id));
+    }
+
+    /**
+     * @return Country[]
+     */
+    public function getCountriesByFilter(CountryFilter $filter): array
+    {
+        return $this->hydrator->hydrateSet(Country::class, $this->repository->getCountriesByFilter($filter));
+    }
+
+    public function saveCountry(Country $country): void
+    {
+        $event = new PreCountrySaveEvent();
+        $previous = null;
+        if ($country->getId() !== null) {
+            $previous = $this->getCountryById($country->getId());
+        }
+        $event->setCurrent($country);
+        if ($previous) {
+            $event->setPrevious($previous);
+        }
+        $this->dispatcher->dispatch($event);
+
+        $this->repository->saveCountry($country);
+
+        $event = new PostCountrySaveEvent();
+        $event->setCurrent($country);
         if ($previous) {
             $event->setPrevious($previous);
         }
