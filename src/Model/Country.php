@@ -3,7 +3,10 @@
 namespace Pantono\Locations\Model;
 
 use Pantono\Database\Traits\SavableModel;
+use Pantono\Contracts\Attributes\Locator;
+use Pantono\Locations\Locations;
 
+#[Locator(methodName: 'getCountryById', className: Locations::class)]
 class Country
 {
     use SavableModel;
