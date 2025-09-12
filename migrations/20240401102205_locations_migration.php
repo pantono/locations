@@ -9,7 +9,7 @@ final class LocationsMigration extends AbstractMigration
     public function up(): void
     {
         $this->table('location')
-            ->addColumn('name', 'string')
+            ->addColumn('name', 'string', ['null' => true])
             ->addColumn('street_address', 'string')
             ->addColumn('po_box_number', 'string', ['null' => true])
             ->addColumn('locality', 'string', ['null' => true])

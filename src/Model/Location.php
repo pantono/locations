@@ -12,6 +12,7 @@ class Location
     use SavableModel;
 
     private ?int $id = null;
+    private ?string $name = null;
     private string $streetAddress;
     private ?string $poBoxNumber = null;
     private ?string $locality = null;
@@ -41,6 +42,16 @@ class Location
     public function setStreetAddress(string $streetAddress): void
     {
         $this->streetAddress = $streetAddress;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
     }
 
     public function getPoBoxNumber(): ?string
