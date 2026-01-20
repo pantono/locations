@@ -2,14 +2,14 @@
 
 namespace Pantono\Locations\Repository;
 
-use Pantono\Database\Repository\MysqlRepository;
+use Pantono\Database\Repository\DefaultRepository;
 use Pantono\Locations\Model\Location;
 use Pantono\Locations\Filter\LocationFilter;
 use Pantono\Locations\Model\BusinessLocation;
 use Pantono\Locations\Filter\CountryFilter;
 use Pantono\Locations\Model\Country;
 
-class LocationsRepository extends MysqlRepository
+class LocationsRepository extends DefaultRepository
 {
     public function getLocationById(int $id): ?array
     {
