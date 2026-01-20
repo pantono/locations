@@ -17,8 +17,8 @@ final class LocationsMigration extends AbstractMigration
             ->addColumn('postal_code', 'string')
             ->addColumn('phone', 'string', ['null' => true])
             ->addColumn('email', 'string', ['null' => true])
-            ->addColumn('latitude', 'point', ['null' => true])
-            ->addColumn('longitude', 'point', ['null' => true])
+            ->addColumn('latitude', 'decimal', ['null' => true, 'precision' => 9, 'scale' => 6])
+            ->addColumn('longitude', 'decimal', ['null' => true, 'precision' => 9, 'scale' => 6])
             ->addColumn('deleted', 'boolean')
             ->create();
 
