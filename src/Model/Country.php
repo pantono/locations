@@ -11,6 +11,7 @@ class Country
     use SavableModel;
 
     private ?int $id = null;
+    private string $name;
     private string $iso2;
     private string $iso3;
     private string $phoneCode;
@@ -24,6 +25,16 @@ class Country
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
     public function getIso2(): string
