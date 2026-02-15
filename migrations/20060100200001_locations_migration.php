@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Phinx\Migration\AbstractMigration;
+use Pantono\Database\Migration\Base\BasePantonoMigration;
 
-final class LocationsMigration extends AbstractMigration
+final class LocationsMigration extends BasePantonoMigration
 {
     public function up(): void
     {
-        $this->table('location')
+        $this->table($this->addTablePrefix('location'))
             ->addColumn('name', 'string', ['null' => true])
             ->addColumn('street_address', 'string')
             ->addColumn('po_box_number', 'string', ['null' => true])
@@ -22,15 +22,15 @@ final class LocationsMigration extends AbstractMigration
             ->addColumn('deleted', 'boolean')
             ->create();
 
-        $this->table('business_location')
+        $this->table($this->addTablePrefix('business_location'))
             ->addColumn('location_id', 'integer')
             ->addColumn('name', 'string')
             ->addColumn('reference', 'string')
             ->addIndex('reference', ['unique' => true])
             ->create();
 
-        $this->table('location_history')
-            ->addColumn('location_id', 'integer')
+        $this->table($this->addTablePrefix('location_history'))
+            ->addLinkedColumn('location_id', $this->addTablePrefix('location'), 'id')
             ->addColumn('date', 'datetime')
             ->addColumn('entry', 'string')
             ->create();
@@ -64,7 +64,7 @@ final class LocationsMigration extends AbstractMigration
             ];
         }
 
-        $this->table('country')
+        $this->table($this->addTablePrefix('country'))
             ->addColumn('name', 'string')
             ->addColumn('iso2', 'string', ['length' => 2])
             ->addColumn('iso3', 'string', ['length' => 3])
@@ -77,12 +77,12 @@ final class LocationsMigration extends AbstractMigration
 
     }
 
-    public function down()
+    public function down(): void
     {
-        $this->table('location_history')->drop()->update();
-        $this->table('business_location')->drop()->update();
-        $this->table('location')->drop()->update();
-        $this->table('country')->drop()->update();
+        $this->table($this->addTablePrefix('location_history'))->drop()->update();
+        $this->table($this->addTablePrefix('business_location'))->drop()->update();
+        $this->table($this->addTablePrefix('location'))->drop()->update();
+        $this->table($this->addTablePrefix('country'))->drop()->update();
 
     }
 }
