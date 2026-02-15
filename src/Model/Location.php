@@ -4,6 +4,8 @@ namespace Pantono\Locations\Model;
 
 use Pantono\Database\Traits\SavableModel;
 use Pantono\Contracts\Attributes\DatabaseTable;
+use Pantono\Contracts\Attributes\Database\OneToOne;
+use Pantono\Contracts\Attributes\FieldName;
 
 #[DatabaseTable('location')]
 class Location
@@ -22,6 +24,8 @@ class Location
     private ?float $latitude = null;
     private ?float $longitude = null;
     private bool $deleted;
+    #[OneToOne(targetModel: Country::class), FieldName('country_id')]
+    private ?Country $country = null;
 
     public function getId(): ?int
     {
@@ -141,5 +145,15 @@ class Location
     public function setDeleted(bool $deleted): void
     {
         $this->deleted = $deleted;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): void
+    {
+        $this->country = $country;
     }
 }
