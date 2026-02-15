@@ -10,6 +10,6 @@ final class LocationCountryMigration extends BasePantonoMigration
     {
         $this->table($this->addTablePrefix('location'))
             ->addLinkedColumn('country_id', $this->addTablePrefix('country'), 'id', ['null' => true])
-            ->create();
+            ->update();
     }
 }
