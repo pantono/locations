@@ -64,7 +64,8 @@ class LocationsRepository extends DefaultRepository
 
     public function getCountriesByFilter(CountryFilter $filter): array
     {
-        $select = $this->getDb()->select()->from('country');
+        $select = $this->getDb()->select()->from('country')
+            ->order($filter->getOrder());
 
         if ($filter->getSearch() !== null) {
             $select->where('name like ?', '%' . $filter->getSearch() . '%');

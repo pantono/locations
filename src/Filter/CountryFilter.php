@@ -13,6 +13,7 @@ class CountryFilter implements PageableInterface
     private ?string $iso2 = null;
     private ?string $iso3 = null;
     private ?string $currencyCode = null;
+    private string $order = 'name';
 
     public function getSearch(): ?string
     {
@@ -52,5 +53,15 @@ class CountryFilter implements PageableInterface
     public function setCurrencyCode(?string $currencyCode): void
     {
         $this->currencyCode = $currencyCode;
+    }
+
+    public function getOrder(): string
+    {
+        return $this->order;
+    }
+
+    public function setOrder(string $order): void
+    {
+        $this->order = $order;
     }
 }
