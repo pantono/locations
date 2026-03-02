@@ -26,20 +26,22 @@ class LocationsRepository extends DefaultRepository
 
     public function getLocationsByFilter(LocationFilter $filter): array
     {
-        $select = $this->getDb()->select()->from('location');
+        $select = $this->getDb()->select('l.*')->from('location', 'l');
         if ($filter->getEmail() !== null) {
-            $select->where('email like ?', '%' . $filter->getEmail() . '%');
+            $select->where('l.email like :email')
+                ->setParameter(':email', '%' . $filter->getEmail() . '%');
         }
 
         if ($filter->getPhone() !== null) {
-            $select->where('phone like ?', '%' . $filter->getPhone() . '%');
+            $select->where('l.phone like :phone')
+                ->setParameter('phone', '%' . $filter->getPhone() . '%');
         }
         if ($filter->getStreetAddress() !== null) {
-            $select->where('street_address like ?', '%' . $filter->getStreetAddress() . '%');
+            $select->where('l.street_address like :street_address')
+                ->setParameter('street_address', '%' . $filter->getStreetAddress() . '%');
         }
 
-        $filter->setTotalResults($this->getCount($select));
-        $select->limitPage($filter->getPage(), $filter->getPerPage());
+        $this->applyCountAndLimit($select, $filter);
 
         return $this->getDb()->fetchAll($select);
     }
@@ -64,21 +66,23 @@ class LocationsRepository extends DefaultRepository
 
     public function getCountriesByFilter(CountryFilter $filter): array
     {
-        $select = $this->getDb()->select()->from('country')
-            ->order($filter->getOrder());
+        $select = $this->getDb()->select('c.*')->from('country', 'c')
+            ->addOrderBy($filter->getOrder());
 
         if ($filter->getSearch() !== null) {
-            $select->where('name like ?', '%' . $filter->getSearch() . '%');
+            $select->where('c.name like :search')
+                ->setParameter('search', '%' . $filter->getSearch() . '%');
         }
         if ($filter->getIso3()) {
-            $select->where('iso3=?', $filter->getIso3());
+            $select->where('iso3=:iso3')
+                ->setParameter('iso3', $filter->getIso3());
         }
         if ($filter->getIso2()) {
-            $select->where('iso2=?', $filter->getIso2());
+            $select->where('iso2=?')
+                ->setParameter('iso2', $filter->getIso2());
         }
 
-        $filter->setTotalResults($this->getCount($select));
-        $select->limitPage($filter->getPage(), $filter->getPerPage());
+        $this->applyCountAndLimit($select, $filter);
         return $this->getDb()->fetchAll($select);
     }
 
